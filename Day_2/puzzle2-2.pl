@@ -11,7 +11,6 @@ my($i,$ribbon,$bow,$total) = 0;
 open(my $IN,"<",$inf)                 # Open input file
   or die "Unable to open input file!\n";
 my(@presents) = <$IN>;                # Slurp file of presents into array
-#my(@presents) = "2x3x4";                # Slurp file of presents into array
 close($IN);                           # Close input file
 foreach(@presents){                   # Each dimension set
   $i++;                               # Present counter
