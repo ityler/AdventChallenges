@@ -16,13 +16,13 @@ foreach(@presents){                   # Each dimension set
   $i++;                               # Present counter
   chomp($_);                          # Strip crlf from end of line
   my($l,$w,$h) = split("x",$_);       # Split dimensions
-  if($l < $w){                     
+  if($l < $w){                        # length less than width
     if($w < $h){                  
       $slack = $l * $w;               # L,W smallest sides
     } else {                          
       $slack = $l * $h;               # L,H smallest sides
     }
-  } else {                           
+  } else {                            # Width less than length 
     if($l < $h){
       $slack = $l * $w;               # W,H smallest sides
     } else {
