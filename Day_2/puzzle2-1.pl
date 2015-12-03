@@ -4,6 +4,7 @@ use warnings;
 # - 
 # Advent of Code 
 # Solution Day-Part 2-1
+# github.com/ityler
 # - 
 my($inf) = "input.txt";               # Input path/filename
 my($i,$slack,$sqft,$total) = 0;
