@@ -4,7 +4,6 @@ use warnings;
 # - 
 # Advent of Code 
 # Solution Day-Part 3-1
-# github.com/ityler
 # - 
 my($inf) = "input.txt";               # Input path/filename
 my(%house) = ();                      # House hash

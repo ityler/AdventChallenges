@@ -4,7 +4,6 @@ use warnings;
 # - 
 # Advent of Code 
 # Solution Day-Part 2-2
-# github.com/ityler
 # - 
 my($inf) = "input.txt";               # Input path/filename
 my($i,$ribbon,$bow,$total) = 0;
@@ -18,15 +17,15 @@ foreach(@presents){                   # Each dimension set
   my($l,$w,$h) = split("x",$_);       # Split dimensions
   if($l < $w){                        # length less than width
     if($w < $h){                  
-      $ribbon = ($l*2) + ($w*2);               # L,W smallest sides
+      $ribbon = ($l*2) + ($w*2);      # L,W smallest sides
     } else {                          
-      $ribbon = ($l*2) + ($h*2);               # L,H smallest sides
+      $ribbon = ($l*2) + ($h*2);      # L,H smallest sides
     }
   } else {                            # Width less than length 
     if($l < $h){
-      $ribbon = ($l*2) + ($w*2);               # W,H smallest sides
+      $ribbon = ($l*2) + ($w*2);      # W,H smallest sides
     } else {
-      $ribbon = ($w*2) + ($h*2);               # W,H smallest sides
+      $ribbon = ($w*2) + ($h*2);      # W,H smallest sides
     }
   }
   $bow = $l*$w*$h;
