@@ -3,7 +3,7 @@ use strict;
 use warnings;
 # - 
 # Advent of Code 
-# Solution Day-Part 9-1 
+# Solution Day-Part 9-2 
 # Permute -> http://search.cpan.org/~dapm/perl-5.14.4/pod/perlfaq4.pod#How_do_I_permute_N_elements_of_a_list?
 # ALT Solution -> http://search.cpan.org/~edpratomo/Algorithm-Permute-0.12/Permute.pm
 # LOCATIONS:
@@ -18,7 +18,7 @@ use warnings;
 # - 
 my($inf) = "input.txt";               # Input path/filename
 my(%loc) = ();                        # Locations hash
-my($res);                             # Results (Shortest distance)
+my($res);                             # Results (longest distance)
 open(my $IN,"<",$inf)                 # Open input file
   or die "Unable to open input file!\n";
 my(@strs) = <$IN>;                    # Slurp file into array
@@ -31,7 +31,7 @@ foreach(@strs){                       # Each string in array
 }
 permutator([keys %loc], []);          # Permute sub routine call
 
-print "Shortest Distance: ".$res."\n";# Write out output
+print "Longest Distance: ".$res."\n"; # Write out output
 
 # Permute routine
 sub permutator {
@@ -42,7 +42,7 @@ sub permutator {
     for(my $i=0; $i < $#perms; $i++){ # Each distance
       $d += $loc{$perms[$i]}{$perms[$i+1]}; # Sum distance
     }
-    if(!($res) || ($d<$res)){
+    if(!($res) || ($d>$res)){
       $res = $d;            # Set result to distance
     }
   } else {
