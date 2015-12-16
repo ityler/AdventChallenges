@@ -11,7 +11,8 @@ use warnings;
 #  -> Increment current password 1 step starting from right->left
 #  -> Test requirements after each increment
 # - 
-my($inp) = "vzbxkghb";                 # Current password(puzzle input)
+#my($inp) = "vzbxkghb";                 # Current password(puzzle input)
+my($inp) = "vzbxxyzz";                  # Current password(puzzle input)
 my(@arr) = ("a".."z");                  # alphabet array
 my(%ltrs) = ();                         # Letter/value hash
 my($i) = 1;                             # Hash letter counter
