@@ -1,8 +1,6 @@
 #!perl
 use strict;
 use warnings;
-use JSON;
-use Data::Dumper;
 # - 
 # Advent of Code 
 # Solution Day-Part 13-1
@@ -15,4 +13,4 @@ open(my $LOG,">","log")               # Open log file
   or die "Unable to open input file!\n";
 my($dat) = <$IN>;                     # Input data
 close($IN);                           # Close input file
-close($LOG);
+close($LOG);                          # Close log file
