@@ -8,44 +8,41 @@ use Data::Dumper;
 # - Tyler Normile - #
 #   NOTES: 
 #   -> Determine which encrypted room names are real by valiating against
-#      the pre-defined rules for the checksum value []
+#      the pre-defined rules for the checksum value [].
 #   -> Each room consists of an encrypted name (lowercase letters separated by dashes) 
 #      followed by a dash, a sector ID, and a checksum in square brackets.
 #   -> Checksum is the five most common letters in the encrypted name,
-#      ties are broken via alphabetization
-#   -> Sum the sector IDs of the real rooms as the solution
+#      ties are broken via alphabetization.
+#   -> If valid room via checksum, decrypt name by shifting each charcter the value of 
+#      the rooms sector ID. i.e(A->B , Z->A) 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - #
 #   USAGE: perl part2.pl < inputFilename
 # -
 
-my(@data,$input,$total,$vcs);
-my($vcnt,$icnt);
-$vcnt = 0;
-$icnt = 0;
-$total = 0;                                 # Valid total (sector-ids)
+# - Uncomment the 2 lines below and print $LOG lines to see each valid room names conversion - #
+# open(my $OUT,">","out.log")
+#   or die "Unable to open output file $!";
+my(@data,$input,$nn,$total,$vcs);           # Inits
 $input = "";                                # Input string init
 while(<>){                                  # Get STDIN as input
   $input .= $_;                             # Append to input
 }
 @data = split(/^/m,$input);                 # Split input(on CRLF) into array
+print "\n";                                 # Output formatter
 foreach(@data){                             # Each line from input file
   my($rn,$sid,$cs) = $_ =~ /([-a-z]+)(\d+?)(\[.*?\])/; # Split into 3 groupings
   $cs =~ s/([\[\]])//g;                     # Substitute out brackets ([ ])
-  print "RN: ${rn}\n";                     # Room name
-  print "SID: ${sid}\n";                   # Sector ID
-  print "CS: ${cs}\n";                     # Checksum
   $vcs = getChkSum($rn);                    # Calculate room names checksum
-  print "VCS: ${vcs}\n\n";
   if($vcs eq $cs){                          # Calculated checksum matches given checksum
-    $total += $sid;                         # Add sector-ID's of valid encrypted room names
-    $vcnt++;                                # Increment valid count
-  } else {
-    $icnt++;                                  # Increment invalid count
+    $nn = decryptRoomName($rn,$sid);        # Decrypt room name
+#   print $OUT "Room Name: ${rn} -> ${nn}\n";
+    if(index($nn,"northpole") != -1){       # See if keyword is found in name(CHALLENGE KEYWORD)
+      print " Match:     ${nn}\n";          # Output decrypted room name
+      print " Sector-ID: ${sid}\n\n";       # Output sector ID (solution)
+    }
   }
 } # --> End each line in input loop
-
-print "\n Total: ${total}\n";               # Output result total (sum of setor-id's)
-
+#close($OUT);
 
 # - Calculate encrypted room names' checksum - #
 #   @PARAM: 
@@ -66,20 +63,49 @@ sub getChkSum {
   foreach my $char(sort{$count{$b} <=> $count{$a} or $a cmp $b} keys %count){
     $z .= $char;                    # Append to result string
   }
-  return substr($z,0,5);              # Return checksum result(first 5)
+  return substr($z,0,5);            # Return checksum result(first 5)
 }
 
-# - Decrypt Room Name - #
+# - Decrypt room name - #
 #   @PARAM:
 #    * Encrypted room name    (STRING)
 #    * Sector ID              (STRING)
 # - - - - - - - - - - - - - - - - - - - #
-#   -> Use shift cypher w/ to shift characters based on the 
-#      sector IDs' value.s
+#   -> Use shift cypher to shift characters based on the 
+#      sector IDs' value
 # -
 sub decryptRoomName {
-
+  my($roomname,$sectorID) = @_;         # Passed parameters (room name, sectorID)
+  my(@chars) = split("",$roomname);     # Each character from room name in array for the decrypt
+  my($realName);                        # Decrypted room name
+  foreach(@chars){                      # Each character in room name
+    # Convert dash ( - ) character to space per decrypt - #
+    if($_ eq "-"){                      # Found space
+      $realName .= " ";                 # Add space to decrypted name
+    } else {                            # Shift decrypt on letter
+      $realName .= shiftChar($_,$sectorID); # Get new shifted character (decrypted)
+    }
+  }
+  return $realName;                     # Return descrypted room name
 } 
 
-# ABCDEFGHIJKLMNOPQRSTUVWXYZ
-# 01234567890123456789012345
+# - Shift character over the specified number of characters - #
+#    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+#    01234567890123456789012345
+#   @PARAM:
+#    * Encrypted room name    (STRING)
+#    * Sector ID              (STRING)
+# - - - - - - - - - - - - - - - - - - - #
+#   RETURNS: 
+#    * Decrypted character    (CHAR)
+# - 
+sub shiftChar {
+  my($char,$mult) = @_;               # Get parameter of (start char and shift counter) 
+  my(@alphas) = ("a"..."z");          # Possible characters
+  my($res) = "";                      # Shifted result character
+  my($idx) = grep { $alphas[$_] eq $char } (0 .. @alphas-1); # Get index value of starting character
+  if($idx != -1){                     # Found in alphas array (should always be true)
+      $res = $alphas[($idx + $mult) % 26]; # New shifted character with modulus
+  }
+  return $res;                        # Return result
+}
